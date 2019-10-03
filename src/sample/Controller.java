@@ -1,16 +1,18 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
-import javax.swing.*;
-import java.awt.*;
+import javafx.scene.control.TextField;
+import javafx.scene.shape.Rectangle;
 
 public class Controller {
     private enum PenSize {
@@ -28,33 +30,75 @@ public class Controller {
             return radius;
         }
     };
-    @FXML private RadioButton blackRadioButton;
-    @FXML private RadioButton redRadioButton;
-    @FXML private RadioButton greenRadioButton;
-    @FXML private RadioButton blueRadioButton;
     @FXML private RadioButton smallRadioButton;
     @FXML private RadioButton mediumRadioButton;
     @FXML private RadioButton largeRadioButton;
     @FXML private Pane drawingAreaPane;
-    @FXML private ToggleGroup colorGroup;
     @FXML private ToggleGroup penSizeGroup;
 
     private PenSize radius = PenSize.MEDIUM;
     private Color brushColor = Color.BLACK;
 
+    @FXML private Slider redSlider;
+    @FXML private Slider greenSlider;
+    @FXML private Slider blueSlider;
+    @FXML private Slider alphaSlider;
+    @FXML private TextField redTextField;
+    @FXML private TextField greenTextField;
+    @FXML private TextField blueTextField;
+    @FXML private TextField alphaTextField;
+    @FXML private Rectangle colorRectangle;
+
+    private int red = 0;
+    private int green = 0;
+    private int blue = 0;
+    private double alpha = 1.0;
+
     public void initialize() {
-        blackRadioButton.setUserData(Color.BLACK);
-        redRadioButton.setUserData(Color.RED);
-        redRadioButton.setUserData(Color.RED);
-        greenRadioButton.setUserData(Color.GREEN);
-        blueRadioButton.setUserData(Color.BLUE);
         smallRadioButton.setUserData(PenSize.SMALL);
         mediumRadioButton.setUserData(PenSize.MEDIUM);
         largeRadioButton.setUserData(PenSize.LARGE);
-    }
-    @FXML
-    private void colorRadioButtonSelected(ActionEvent e) {
-        brushColor = (Color) colorGroup.getSelectedToggle().getUserData();
+
+        redTextField.textProperty().bind(redSlider.valueProperty().asString("%.0f"));
+        greenTextField.textProperty().bind(greenSlider.valueProperty().asString("%.0f"));
+        blueTextField.textProperty().bind(blueSlider.valueProperty().asString("%.0f"));
+        alphaTextField.textProperty().bind(alphaSlider.valueProperty().asString("%.0f"));
+
+        redSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                red = newValue.intValue();
+                colorRectangle.setFill(Color.rgb(red, green, blue,alpha));
+                brushColor = Color.rgb(red, green, blue,alpha);
+            }
+        });
+
+        greenSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                green = newValue.intValue();
+                colorRectangle.setFill(Color.rgb(red, green, blue,alpha));
+                brushColor = Color.rgb(red, green, blue,alpha);
+            }
+        });
+
+        blueSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                blue = newValue.intValue();
+                colorRectangle.setFill(Color.rgb(red, green, blue,alpha));
+                brushColor = Color.rgb(red, green, blue,alpha);
+            }
+        });
+
+        alphaSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                alpha = newValue.intValue();
+                colorRectangle.setFill(Color.rgb(red, green, blue,alpha));
+                brushColor = Color.rgb(red, green, blue,alpha);
+            }
+        });
     }
 
     @FXML
